@@ -25,13 +25,13 @@ insert into product(description, is_favorite, img_url, price, name, category_id)
 VALUEs ('description 1', true, '', 10, 'Butter Chicken', 2);
 
 insert into product(description, is_favorite, img_url, price, name, category_id)
-VALUEs ('description 2', true, '', 16.90, 'Samosa', 1);
+VALUEs ('description 2', true, '', 16, 'Samosa', 1);
 
 insert into product(description, is_favorite, img_url, price, name, category_id)
-VALUEs ('description 3', true, '', 9.99, 'Mango Lassi', 1);
+VALUEs ('description 3', true, '', 9, 'Mango Lassi', 1);
 
 insert into product(description, is_favorite, img_url, price, name, category_id)
-VALUEs ('description 4', true, '', 19.99, 'Mutton Curry', 2);
+VALUEs ('description 4', true, '', 19, 'Mutton Curry', 2);
 
 insert into product(description, is_favorite, img_url, price, name, category_id)
 VALUEs ('description 5', true, '', 10, 'Tandoori murg', 1);
