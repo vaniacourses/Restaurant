@@ -24,6 +24,7 @@ public class AddressController {
     private final AddressService addressService;
     private final CountryService countryService;
     private final StateService stateService;
+    private static final String COUNTRIES_ATTRIBUTE = "countries";
 
     public AddressController(AddressService addressService, CountryService countryService, StateService stateService) {
         this.addressService = addressService;
@@ -44,7 +45,7 @@ public class AddressController {
     public String addAddress(Model model) {
         model.addAttribute(Constants.PageTitle, "Add Address");
         model.addAttribute("addressForm", new AddressForm());
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         return "user/address/addAddress";
     }
 
@@ -53,7 +54,7 @@ public class AddressController {
     public String addAddress(@Valid @ModelAttribute("addressForm") AddressForm addressForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
         model.addAttribute(Constants.PageTitle, "Add Address");
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         if (addressForm.getCountry() != null) {
             model.addAttribute("states", this.stateService.getStatesByCountry(addressForm.getCountry()));
         }
@@ -75,7 +76,7 @@ public class AddressController {
         model.addAttribute(Constants.PageTitle, "Edit Address");
         AddressDTO addressDTO = this.addressService.getAddressById(id);
         model.addAttribute("editAddressForm", RestaurantUtils.mapAddressDTOToEditAddressForm(addressDTO));
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         model.addAttribute("states", this.stateService.getStatesByCountry(addressDTO.country()));
         return "user/address/editAddress";
     }
@@ -85,7 +86,7 @@ public class AddressController {
     public String editAddress(@PathVariable("id") long id, @Valid @ModelAttribute("editAddressForm") EditAddressForm editAddressForm, BindingResult bindingResult,
                               RedirectAttributes redirectAttributes, Model model) {
         model.addAttribute(Constants.PageTitle, "Edit Address");
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         if (editAddressForm.getCountry() != null) {
             model.addAttribute("states", this.stateService.getStatesByCountry(editAddressForm.getCountry()));
         }
