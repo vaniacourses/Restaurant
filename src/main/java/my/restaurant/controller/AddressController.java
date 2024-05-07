@@ -11,20 +11,22 @@ import my.restaurant.service.StateService;
 import my.restaurant.utils.Constants;
 import my.restaurant.utils.RestaurantUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
+@RestController
 public class AddressController {
 
     private final AddressService addressService;
     private final CountryService countryService;
     private final StateService stateService;
     private static final String COUNTRIES_ATTRIBUTE = "countries";
+    private static final String MESSAGE_ATTRIBUTE = "message";
+    private static final String STATES_ATTRIBUTE = "states";
+    private static final String REDIRECT_ATTRIBUTE = "redirect:/user/addresses";
 
     public AddressController(AddressService addressService, CountryService countryService, StateService stateService) {
         this.addressService = addressService;
@@ -56,7 +58,7 @@ public class AddressController {
         model.addAttribute(Constants.PageTitle, "Add Address");
         model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         if (addressForm.getCountry() != null) {
-            model.addAttribute("states", this.stateService.getStatesByCountry(addressForm.getCountry()));
+            model.addAttribute(STATES_ATTRIBUTE, this.stateService.getStatesByCountry(addressForm.getCountry()));
         }
 
         if (bindingResult.hasErrors()) {
@@ -65,9 +67,9 @@ public class AddressController {
 
         this.addressService.addAddress(addressForm);
 
-        redirectAttributes.addFlashAttribute("message", "Address added");
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Address added");
 
-        return "redirect:/user/addresses";
+        return REDIRECT_ATTRIBUTE;
     }
 
     @GetMapping("user/address/edit/{id}")
@@ -77,7 +79,7 @@ public class AddressController {
         AddressDTO addressDTO = this.addressService.getAddressById(id);
         model.addAttribute("editAddressForm", RestaurantUtils.mapAddressDTOToEditAddressForm(addressDTO));
         model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
-        model.addAttribute("states", this.stateService.getStatesByCountry(addressDTO.country()));
+        model.addAttribute(STATES_ATTRIBUTE, this.stateService.getStatesByCountry(addressDTO.country()));
         return "user/address/editAddress";
     }
 
@@ -88,7 +90,7 @@ public class AddressController {
         model.addAttribute(Constants.PageTitle, "Edit Address");
         model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         if (editAddressForm.getCountry() != null) {
-            model.addAttribute("states", this.stateService.getStatesByCountry(editAddressForm.getCountry()));
+            model.addAttribute(STATES_ATTRIBUTE, this.stateService.getStatesByCountry(editAddressForm.getCountry()));
         }
         if (bindingResult.hasErrors()) {
             return "/user/address/editAddress";
@@ -96,22 +98,21 @@ public class AddressController {
 
         this.addressService.editAddress(editAddressForm);
 
-        redirectAttributes.addFlashAttribute("message", "Address updated");
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Address updated");
 
-        return "redirect:/user/addresses";
+        return REDIRECT_ATTRIBUTE;
     }
 
     @PostMapping("/user/address/delete")
     @PreAuthorize("hasAuthority('USER')")
     public String deletePayment(long addressId, RedirectAttributes redirectAttributes) {
         this.addressService.deleteAddress(addressId);
-        redirectAttributes.addFlashAttribute("message", "Address deleted");
-        return "redirect:/user/addresses";
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Address deleted");
+        return REDIRECT_ATTRIBUTE;
     }
 
     @PostMapping("user/addressModal/add")
     @PreAuthorize("hasAuthority('USER')")
-    @ResponseBody
     public AddressModalDTO addAddressModal(@Valid @ModelAttribute("addressModal") AddressForm addressForm, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
