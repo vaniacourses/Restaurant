@@ -12,5 +12,9 @@ public class MvcConfig implements WebMvcConfigurer {
      * as configurações do MVC no Spring.
      */
     public MvcConfig() {
+	// Este método está vazio porque não requer configuração adicional no momento.
+    // Se configurações adicionais forem necessárias no futuro, elas podem ser adicionadas aqui.
+    // Por enquanto, não há ação necessária.
     }
+    
 }
