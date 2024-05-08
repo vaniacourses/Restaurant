@@ -15,11 +15,11 @@ public class CartItemKey implements Serializable {
 
     @JoinColumn(name = "cart_id", nullable = false)
     @ManyToOne
-    private Cart cart;
+    private transient Cart cart;
 
     @JoinColumn(name = "product_id", nullable = false)
     @ManyToOne
-    private Product product;
+    private transient Product product;
 
     public CartItemKey(Cart cart, Product product) {
         this.cart = cart;

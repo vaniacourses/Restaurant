@@ -56,10 +56,10 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserAddress> addresses;
+    private transient List<UserAddress> addresses;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private transient List<Order> orders;
 
     @Column(name = "is_enabled")
     private boolean enabled;
@@ -71,13 +71,13 @@ public class User extends BaseEntity implements UserDetails {
     private boolean nonExpired;
 
     @OneToOne(mappedBy = "user")
-    private Cart cart;
+    private transient Cart cart;
 
     @OneToOne(mappedBy = "user")
-    private UserPreference userPreference;
+    private transient UserPreference userPreference;
 
     @OneToMany(mappedBy = "user")
-    private List<UserPaymentMethod> paymentMethods = new ArrayList<>();
+    private transient List<UserPaymentMethod> paymentMethods = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
