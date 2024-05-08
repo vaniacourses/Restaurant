@@ -1,6 +1,5 @@
 package my.restaurant.repository;
 
-import my.restaurant.entity.User;
 import my.restaurant.entity.UserAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -4,18 +4,11 @@ import jakarta.transaction.Transactional;
 import my.restaurant.dto.AddressDTO;
 import my.restaurant.dto.OrderDTO;
 import my.restaurant.dto.PaymentDTO;
-import my.restaurant.entity.*;
 import my.restaurant.modal.EmailType;
-import my.restaurant.modal.OrderStatus;
 import my.restaurant.modal.ShoppingCart;
 import my.restaurant.modal.forms.CheckoutForm;
-import my.restaurant.repository.OrderRepository;
-import my.restaurant.repository.UserRepository;
 import my.restaurant.service.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
