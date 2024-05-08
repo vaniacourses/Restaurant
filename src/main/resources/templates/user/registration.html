@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:insert="~{fragments/head :: head}">
+    <title>Registration</title>
+</head>
 <body th:attr="data-bs-theme=${theme}">
 <div th:replace="~{fragments/header :: header_body}"></div>
 <div class="wrapper">
@@ -69,60 +71,6 @@
     </div>
 </div>
 
-<!--<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-center">Registration</h2>
-                </div>
-                <div class="card-body">
-                    <form th:action="@{/registration}" th:object="${registrationForm}" class="" action="#"
-                          th:method="POST">
-                        <div class="mb-4">
-                            <label for="emailId" class="form-label">Email Id</label>
-                            <input type="text" th:field="*{emailId}" class="form-control" placeholder="email id"
-                                   id="emailId" th:classappend="${#fields.hasErrors('emailId') ? 'is-invalid': ''}"/>
-                            <span th:if="${#fields.hasErrors('emailId')}" th:errors="*{emailId}"
-                                  class="invalid-feedback"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label" for="firstName">First Name</label>
-                            <input type="text" th:field="*{firstName}" class="form-control"
-                                   placeholder="First Name" id="firstName"
-                                   th:classappend="${#fields.hasErrors('firstName') ? 'is-invalid': ''}"/>
-                            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
-                                  class="invalid-feedback"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" id="lastName" th:field="*{lastName}" class="form-control"
-                                   placeholder="Last Name"
-                                   th:classappend="${#fields.hasErrors('lastName') ? 'is-invalid': ''}"/>
-                            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
-                                  class="invalid-feedback"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label" for="password" >Password</label>
-                            <input type="password" th:field="*{password}" id="password" class="form-control" placeholder="Password"
-                                   th:classappend="${#fields.hasErrors('password') ? 'is-invalid': ''}"/>
-                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-                                  class="invalid-feedback"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit">Register</button>
-                            <span>Already registered? <a th:href="@{/login}">Login here</a></span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
 <div th:replace="~{fragments/footer :: footer_body}"></div>
 </body>
 </html>

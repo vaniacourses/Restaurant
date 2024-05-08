@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       lang="en">
-<head th:insert="~{fragments/head :: head}"></head>
+<head th:insert="~{fragments/head :: head}">
+    <title>Home</title>
+</head>
 <body th:attr="data-bs-theme=${theme}">
 <div th:replace="~{fragments/header :: header_body}"></div>
 <div class="wrapper">

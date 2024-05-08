@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       lang="en">
-<head th:insert="~{fragments/head :: head}"></head>
+<head th:insert="~{fragments/head :: head}">
+    <title>Profile</title>
+</head>
 <body th:attr="data-bs-theme=${theme}">
 <div th:replace="~{fragments/header :: header_body}"></div>
 <div class="wrapper">
@@ -12,10 +14,6 @@
                 <div class="row small-md">
                     <div th:replace="~{fragments/profileNavigator :: profile_navigation}"></div>
                     <div class="col-12 col-md-9 col-lg-8 off-set-lg-1">
-                        <!--<div class="alert alert-warning alert-dismissible fade show" th:if="${cartItemRemovedMsg != null}" role="alert">
-                            <span th:text="${cartItemRemovedMsg}"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>-->
                         <div class="alert alert-info alert-dismissible fade show" th:if="${message != null}" role="alert">
                             <span th:text="${message}"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
