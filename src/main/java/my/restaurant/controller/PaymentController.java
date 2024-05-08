@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class PaymentController {
 
+    private static final String MESSAGE_ATTRIBUTE = "message";  // Definindo a constante para "message"
     private final PaymentService paymentService;
 
     public PaymentController(PaymentService paymentService) {
@@ -52,7 +53,7 @@ public class PaymentController {
         }
 
         this.paymentService.addPayment(paymentForm);
-        redirectAttributes.addFlashAttribute("message", "Payment added");
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Payment added");
         return "redirect:/user/payments";
     }
 
@@ -75,18 +76,16 @@ public class PaymentController {
         }
 
         this.paymentService.editPayment(editPaymentForm);
-
-        redirectAttributes.addFlashAttribute("message", "Payment added");
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Payment added");
 
         return "redirect:/user/payments";
-
     }
 
     @PostMapping("/user/payment/delete")
     @PreAuthorize("hasAuthority('USER')")
     public String deletePayment(long paymentId, RedirectAttributes redirectAttributes) {
         this.paymentService.deletePayment(paymentId);
-        redirectAttributes.addFlashAttribute("message", "Payment deleted");
+        redirectAttributes.addFlashAttribute(MESSAGE_ATTRIBUTE, "Payment deleted");
         return "redirect:/user/payments";
     }
 

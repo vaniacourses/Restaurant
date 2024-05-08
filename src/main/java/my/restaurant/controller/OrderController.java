@@ -17,6 +17,7 @@ import java.util.UUID;
 @Controller
 public class OrderController {
 
+    private static final String ORDER_ATTRIBUTE = "order";  // Definindo a constante
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -27,7 +28,7 @@ public class OrderController {
     @PreAuthorize("hasAuthority('USER')")
     public String orders(@Param("page") Optional<Integer> page, @Param("size") Optional<Integer> size, Model model) {
         model.addAttribute(Constants.PageTitle, "List of Orders");
-        model.addAttribute("orders", this.orderService.getOrders(page.orElse(0), size.orElse(50)));
+        model.addAttribute(ORDER_ATTRIBUTE, this.orderService.getOrders(page.orElse(0), size.orElse(50)));
         return "order/orderList";
     }
 
@@ -35,14 +36,14 @@ public class OrderController {
     @PreAuthorize("hasAuthority('USER')")
     public String ordersById(@PathVariable UUID id, Model model) {
         model.addAttribute(Constants.PageTitle, String.format("Order details for %s", id));
-        model.addAttribute("order", this.orderService.getOrder(id));
+        model.addAttribute(ORDER_ATTRIBUTE, this.orderService.getOrder(id));
         return "order/orderDetails";
     }
 
     @GetMapping("order/confirmation")
     public String orderPlaced(@RequestParam("id") UUID uuid, @RequestParam("emailId") String emailId, Model model) {
         model.addAttribute(Constants.PageTitle, String.format("Order placed %s", uuid));
-        model.addAttribute("order", this.orderService.getOrder(uuid, emailId));
+        model.addAttribute(ORDER_ATTRIBUTE, this.orderService.getOrder(uuid, emailId));
         model.addAttribute("message", "Congratulations!, Your order has been placed.");
         return "order/orderConfirmation";
     }
@@ -54,14 +55,13 @@ public class OrderController {
         return "order/orderLookup";
     }
 
-
     @PostMapping("order/lookup")
     public String orderLookup(@Valid @ModelAttribute("orderLookupForm") OrderLookupForm orderLookupForm, BindingResult bindingResult, Model model) {
         model.addAttribute(Constants.PageTitle, "Order Lookup");
         if (bindingResult.hasErrors()) {
             return "order/orderLookup";
         }
-        model.addAttribute("order", this.orderService.getOrder(orderLookupForm.getOrderNumber(), orderLookupForm.getEmailId()));
+        model.addAttribute(ORDER_ATTRIBUTE, this.orderService.getOrder(orderLookupForm.getOrderNumber(), orderLookupForm.getEmailId()));
         return "order/orderLookup";
     }
 
