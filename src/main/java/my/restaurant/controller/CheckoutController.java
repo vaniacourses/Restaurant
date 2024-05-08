@@ -33,6 +33,17 @@ public class CheckoutController {
     private final CountryService countryService;
     private final CheckoutService checkoutService;
     private final SmartValidator smartValidator;
+    private static final String COUNTRIES_ATTRIBUTE = "countries";
+    private static final String DEFAULT_ADDRESSES = "defaultAddresses";
+    private static final String DEFAULT_PAYMENT = "defaultPayment";
+    private static final String ITEMS_ATTRIBUTE = "items";
+    private static final String PRICE_ATTRIBUTE = "price";
+    private static final String REDIRECT = "redirect:/cart";
+    private static final String SELECT_ADDRESS_FLAG = "selectAddressFlag";
+    private static final String SELECT_PAYMENT_FLAG = "selectPaymentFlag";
+    private static final String SELECTED = "selected";
+    private static final String SHIPPING = "shipping";
+
 
     public CheckoutController(AddressService addressService, PaymentService paymentService, AuthenticationFacade authenticationFacade, CartService cartService, StateService stateService, CountryService countryService, CheckoutService checkoutService, SmartValidator smartValidator) {
         this.addressService = addressService;
@@ -90,22 +101,22 @@ public class CheckoutController {
                 checkoutForm.setAddressId(defaultAddress.id());
                 selected.setBillingAddressId(defaultAddress.id());
             }
-            httpSession.setAttribute("selected", selected);
-            model.addAttribute("defaultPayment", defaultPayment);
-            model.addAttribute("defaultAddresses", defaultAddress);
+            httpSession.setAttribute(SELECTED, selected);
+            model.addAttribute(DEFAULT_PAYMENT, defaultPayment);
+            model.addAttribute(DEFAULT_ADDRESSES, defaultAddress);
         }
 
         model.addAttribute("checkoutForm", checkoutForm);
         if (shoppingCart == null || shoppingCart.isEmpty()) {
-            return "redirect:/cart";
+            return REDIRECT;
         }
-        model.addAttribute("items", shoppingCart.getCartItems());
+        model.addAttribute(ITEMS_ATTRIBUTE, shoppingCart.getCartItems());
         model.addAttribute("tax", shoppingCart.getTax());
-        model.addAttribute("price", shoppingCart.getPrice());
-        model.addAttribute("shipping", shoppingCart.getShipping());
-        model.addAttribute("countries", this.countryService.getCountries());
-        model.addAttribute("selectAddressFlag", false);
-        model.addAttribute("selectPaymentFlag", false);
+        model.addAttribute(PRICE_ATTRIBUTE, shoppingCart.getPrice());
+        model.addAttribute(SHIPPING, shoppingCart.getShipping());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
+        model.addAttribute(SELECT_ADDRESS_FLAG, false);
+        model.addAttribute(SELECT_PAYMENT_FLAG, false);
         return "checkout";
     }
 
@@ -114,7 +125,7 @@ public class CheckoutController {
                                   Model model) {
         ShoppingCart shoppingCart = this.cartService.getCart();
         if (shoppingCart == null || shoppingCart.isEmpty()) {
-            return "redirect:/cart";
+            return REDIRECT;
         }
 
         Selected selected = selected(httpSession);
@@ -131,9 +142,9 @@ public class CheckoutController {
         } else {
             defaultAddress = this.addressService.getDefaultAddress();
         }
-        model.addAttribute("defaultPayment", defaultPayment);
-        model.addAttribute("defaultAddresses", defaultAddress);
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(DEFAULT_PAYMENT, defaultPayment);
+        model.addAttribute(DEFAULT_ADDRESSES, defaultAddress);
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         if (checkoutForm.getCountry() != null) {
             model.addAttribute("states", this.stateService.getStatesByCountry(checkoutForm.getCountry()));
         }
@@ -150,17 +161,17 @@ public class CheckoutController {
         }
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("selectAddressFlag", false);
-            model.addAttribute("selectPaymentFlag", false);
-            model.addAttribute("items", shoppingCart.getCartItems());
+            model.addAttribute(SELECT_ADDRESS_FLAG, false);
+            model.addAttribute(SELECT_PAYMENT_FLAG, false);
+            model.addAttribute(ITEMS_ATTRIBUTE, shoppingCart.getCartItems());
             model.addAttribute("tax", shoppingCart.getTax());
-            model.addAttribute("price", shoppingCart.getPrice());
-            model.addAttribute("shipping", shoppingCart.getShipping());
+            model.addAttribute(PRICE_ATTRIBUTE, shoppingCart.getPrice());
+            model.addAttribute(SHIPPING, shoppingCart.getShipping());
             return "checkout";
         }
 
         OrderDTO orderDTO = this.checkoutService.processCheckout(checkoutForm);
-        httpSession.removeAttribute("selected");
+        httpSession.removeAttribute(SELECTED);
         model.addAttribute("order", orderDTO);
         return "redirect:order/confirmation?id=" + orderDTO.orderId() + "&emailId=" + checkoutForm.getEmailId();
     }
@@ -169,24 +180,24 @@ public class CheckoutController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("selectAddress/checkout")
     public String selectAddressCheckout(@Param("addressId") Long addressId, HttpSession httpSession, Model model) {
-        model.addAttribute("defaultPayment", this.paymentService.getDefaultPayment());
+        model.addAttribute(DEFAULT_PAYMENT, this.paymentService.getDefaultPayment());
         model.addAttribute("addressList", this.addressService.getAddressesForUser());
-        model.addAttribute("countries", this.countryService.getCountries());
+        model.addAttribute(COUNTRIES_ATTRIBUTE, this.countryService.getCountries());
         ShoppingCart shoppingCart = this.cartService.getCart();
         if (shoppingCart == null || shoppingCart.isEmpty()) {
-            return "redirect:/cart";
+            return REDIRECT;
         }
-        model.addAttribute("items", shoppingCart.getCartItems());
+        model.addAttribute(ITEMS_ATTRIBUTE, shoppingCart.getCartItems());
         model.addAttribute("tax", shoppingCart.getTax());
-        model.addAttribute("price", shoppingCart.getPrice());
-        model.addAttribute("shipping", shoppingCart.getShipping());
+        model.addAttribute(PRICE_ATTRIBUTE, shoppingCart.getPrice());
+        model.addAttribute(SHIPPING, shoppingCart.getShipping());
         Selected selected = selected(httpSession);
         if (addressId != null) {
             selected.setBillingAddressId(addressId);
         }
         model.addAttribute("selectAddressCheckout", new SelectAddressCheckoutForm(selected.getBillingAddressId()));
-        model.addAttribute("selectAddressFlag", true);
-        model.addAttribute("selectPaymentFlag", false);
+        model.addAttribute(SELECT_ADDRESS_FLAG, true);
+        model.addAttribute(SELECT_PAYMENT_FLAG, false);
         return "checkout/selectAddress";
     }
 
@@ -195,22 +206,22 @@ public class CheckoutController {
     @GetMapping("selectPayment/checkout")
     public String selectPaymentCheckout(@Param("paymentId") Long paymentId, HttpSession httpSession, Model model) {
         model.addAttribute("paymentList", this.paymentService.getPayments());
-        model.addAttribute("defaultAddresses", this.addressService.getDefaultAddress());
+        model.addAttribute(DEFAULT_ADDRESSES, this.addressService.getDefaultAddress());
         ShoppingCart shoppingCart = this.cartService.getCart();
         if (shoppingCart == null || shoppingCart.isEmpty()) {
-            return "redirect:/cart";
+            return REDIRECT;
         }
-        model.addAttribute("items", shoppingCart.getCartItems());
+        model.addAttribute(ITEMS_ATTRIBUTE, shoppingCart.getCartItems());
         model.addAttribute("tax", shoppingCart.getTax());
-        model.addAttribute("price", shoppingCart.getPrice());
-        model.addAttribute("shipping", shoppingCart.getShipping());
+        model.addAttribute(PRICE_ATTRIBUTE, shoppingCart.getPrice());
+        model.addAttribute(SHIPPING, shoppingCart.getShipping());
         Selected selected = selected(httpSession);
         if (paymentId != null) {
             selected.setPaymentId(paymentId);
         }
         model.addAttribute("selectPaymentCheckout", new SelectPaymentCheckoutForm(selected.getPaymentId()));
-        model.addAttribute("selectPaymentFlag", true);
-        model.addAttribute("selectAddressFlag", false);
+        model.addAttribute(SELECT_PAYMENT_FLAG, true);
+        model.addAttribute(SELECT_ADDRESS_FLAG, false);
         return "checkout/selectPayment";
     }
 
@@ -221,7 +232,7 @@ public class CheckoutController {
 
         Selected selected = selected(httpSession);
         selected.setBillingAddressId(addressCheckoutForm.selectedId());
-        httpSession.setAttribute("selected", selected);
+        httpSession.setAttribute(SELECTED, selected);
         return "redirect:/checkout";
     }
 
@@ -232,13 +243,13 @@ public class CheckoutController {
 
         Selected selected = selected(httpSession);
         selected.setPaymentId(paymentCheckoutForm.paymentId());
-        httpSession.setAttribute("selected", selected);
+        httpSession.setAttribute(SELECTED, selected);
         return "redirect:/checkout";
     }
 
 
     private Selected selected(HttpSession httpSession) {
-        Selected selected = (Selected) httpSession.getAttribute("selected");
+        Selected selected = (Selected) httpSession.getAttribute(SELECTED);
         return selected != null ? selected : new Selected();
     }
 
