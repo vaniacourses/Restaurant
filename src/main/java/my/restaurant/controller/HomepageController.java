@@ -30,5 +30,6 @@ class HomepageController {
     @GetMapping("favicon.ico")
     @ResponseBody
     public void returnNoFavicon() {
+    	throw new UnsupportedOperationException("Favicon not implemented");
     }
 }
