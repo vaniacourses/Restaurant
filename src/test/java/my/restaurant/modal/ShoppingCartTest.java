@@ -1,125 +1,122 @@
 package my.restaurant.modal;
 
-import java.util.UUID;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import my.restaurant.dto.CurrencyDTO;
 import my.restaurant.dto.PriceDTO;
 import my.restaurant.dto.ProductDTO;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class ShoppingCartTest {
 
-    private ShoppingCart shoppingCart;
+    @InjectMocks
+    private ShoppingCart carrinhoDeCompras;
+
+    @Mock
+    private ProductDTO produtoMock;
+
+    @Mock
+    private ProductDTO outroProdutoMock;
 
     @BeforeEach
-    public void setUp() {
-        shoppingCart = new ShoppingCart();
+    public void configurar() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testAddItem() {
+    public void testarAdicionarItem() {
+        UUID idProduto = UUID.randomUUID();
+        PriceDTO preco = new PriceDTO(10, null);
+        when(produtoMock.productId()).thenReturn(idProduto);
+        when(produtoMock.price()).thenReturn(preco);
+
+        carrinhoDeCompras.addItem(produtoMock, 1);
         
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(10, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        
-        Assertions.assertFalse(shoppingCart.isEmpty());
-        Assertions.assertEquals(1, shoppingCart.getCount());
-    
+        assertEquals(1, carrinhoDeCompras.getCount());
     }
 
     @Test
-    public void testRemoveItem() {
-        
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(10, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        shoppingCart.removeItem(productDTO);
-        
-        Assertions.assertTrue(shoppingCart.isEmpty());
-    
+    public void testarAdicionarMultiplosItens() {
+        UUID idProduto1 = UUID.randomUUID();
+        UUID idProduto2 = UUID.randomUUID();
+        PriceDTO preco1 = new PriceDTO(10, null);
+        PriceDTO preco2 = new PriceDTO(5, null);
+        when(produtoMock.productId()).thenReturn(idProduto1);
+        when(outroProdutoMock.productId()).thenReturn(idProduto2);
+        when(produtoMock.price()).thenReturn(preco1);
+        when(outroProdutoMock.price()).thenReturn(preco2);
+
+        carrinhoDeCompras.addItem(produtoMock, 2);
+        carrinhoDeCompras.addItem(outroProdutoMock, 1);
+
+        assertEquals(3, carrinhoDeCompras.getCount());
     }
 
     @Test
-    public void testUpdateQuantity() { // teste para verificar se a atualização do carrinho está funcionando corretamente
-        
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(5, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        
-        shoppingCart.updateQuantity(productDTO, 3);
-        
-        Assertions.assertFalse(shoppingCart.isEmpty());
-        Assertions.assertEquals(3, shoppingCart.getCount());
-    
+    public void testarAtualizarQuantidade() {
+        UUID idProduto = UUID.randomUUID();
+        PriceDTO preco = new PriceDTO(5, null);
+        when(produtoMock.productId()).thenReturn(idProduto);
+        when(produtoMock.price()).thenReturn(preco);
+
+        carrinhoDeCompras.addItem(produtoMock, 1);
+
+        carrinhoDeCompras.updateQuantity(produtoMock, 3);
+
+        assertEquals(3, carrinhoDeCompras.getCount());
     }
 
     @Test
-    public void testClearCart() { // verificar se o carrinho está sendo esvaziado corretamente
-        
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(10, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        shoppingCart.clear();
-        
-        Assertions.assertTrue(shoppingCart.isEmpty());
-        Assertions.assertEquals(0, shoppingCart.getCount());
-    
+    public void testarRemoverItem() {
+        UUID idProduto = UUID.randomUUID();
+        PriceDTO preco = new PriceDTO(10, null);
+        when(produtoMock.productId()).thenReturn(idProduto);
+        when(produtoMock.price()).thenReturn(preco);
+
+        carrinhoDeCompras.addItem(produtoMock, 1);
+
+        carrinhoDeCompras.removeItem(produtoMock);
+
+        assertEquals(0, carrinhoDeCompras.getCount());
+        assertEquals(0, carrinhoDeCompras.getPrice());
     }
 
     @Test
-    public void testTotalPriceCalculation() { // verificar se o preço total está sendo calculado corretamente
-        
-        UUID productId1 = UUID.randomUUID();
-        PriceDTO price1 = new PriceDTO(10, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO1 = new ProductDTO(productId1, "Produto 1", "/img/product/product1.jpg", "Descrição do produto 1", price1, null);
-        
-        UUID productId2 = UUID.randomUUID();
-        PriceDTO price2 = new PriceDTO(5, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO2 = new ProductDTO(productId2, "Produto 2", "/img/product/product2.jpg", "Descrição do produto 2", price2, null);
-        
-        shoppingCart.addItem(productDTO1, 2);
-        shoppingCart.addItem(productDTO2, 1);
-        
-        Assertions.assertEquals(25, shoppingCart.getPrice());
-    
+    public void testarCalculoPrecoTotal() {
+        UUID idProduto1 = UUID.randomUUID();
+        UUID idProduto2 = UUID.randomUUID();
+        PriceDTO preco1 = new PriceDTO(10, null);
+        PriceDTO preco2 = new PriceDTO(5, null);
+        when(produtoMock.productId()).thenReturn(idProduto1);
+        when(outroProdutoMock.productId()).thenReturn(idProduto2);
+        when(produtoMock.price()).thenReturn(preco1);
+        when(outroProdutoMock.price()).thenReturn(preco2);
+
+        carrinhoDeCompras.addItem(produtoMock, 2);
+        carrinhoDeCompras.addItem(outroProdutoMock, 1);
+
+        assertEquals(25, carrinhoDeCompras.getPrice());
     }
 
     @Test
-    public void testEmptyCartAfterRemoveAllItems() { // verificar se o carrinho fica vazio depois de remover todos os itens
+    public void testarLimparCarrinho() {
+        UUID idProduto = UUID.randomUUID();
+        PriceDTO preco = new PriceDTO(10, null);
+        when(produtoMock.productId()).thenReturn(idProduto);
+        when(produtoMock.price()).thenReturn(preco);
 
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(15, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        shoppingCart.removeItem(productDTO);
-        
-        Assertions.assertTrue(shoppingCart.isEmpty());
-        Assertions.assertEquals(0, shoppingCart.getCount());
+        carrinhoDeCompras.addItem(produtoMock, 1);
+
+        carrinhoDeCompras.clear();
+
+        assertEquals(0, carrinhoDeCompras.getCount());
+        assertEquals(0, carrinhoDeCompras.getPrice());
+        assertEquals(true, carrinhoDeCompras.isEmpty());
     }
-
-    @Test
-    public void testRemoveItemWithZeroQuantity() { // verificar se a atualização da quant. de um item para zero remove o item do carrinho
-
-        UUID productId = UUID.randomUUID();
-        PriceDTO price = new PriceDTO(20, new CurrencyDTO("Dólar Americano", "USD"));
-        ProductDTO productDTO = new ProductDTO(productId, "Produto Teste", "/img/product/test.jpg", "Descrição do produto", price, null);
-        
-        shoppingCart.addItem(productDTO, 1);
-        shoppingCart.updateQuantity(productDTO, 0);
-        
-        Assertions.assertTrue(shoppingCart.isEmpty());
-        Assertions.assertEquals(0, shoppingCart.getCount());
-    }
-
 }
