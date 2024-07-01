@@ -19,9 +19,13 @@ def main():
 
 def teste_adicionar_produto_carrinho(driver):
 
-    driver.get("http://localhost:9000/")
+    url = "http://localhost:9000/"
+    driver.get(url)
 
     time.sleep(2)
+
+    print("title: " + driver.title)
+    assert "My Restaurant" in driver.title, "Página inicial não carregou corretamente"
 
     produto_xpath = "/html/body/div[2]/div/section[2]/div/div[2]/div[1]"
 
@@ -45,12 +49,20 @@ def teste_adicionar_produto_carrinho(driver):
             EC.presence_of_element_located((By.XPATH, add_to_cart_xpath))
         )
         add_to_cart_button.click()
+
+        time.sleep(1)
         print("Produto adicionado ao carrinho")
+        
+        cart_text_xpath = "//h3[contains(text(), 'Shopping Cart')]"
+        cart_text_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, cart_text_xpath))
+        )
+        
+        assert cart_text_element.text == "Shopping Cart", "'Shopping Cart' não encontrado na página do carrinho."
+        print("Teste realizado com sucesso!")
 
     except Exception as e:
         print(f"Erro durante a execução do teste: {e}")
-
-    input('Toque para encerrar...')
     
 if __name__ == "__main__":
     main()
