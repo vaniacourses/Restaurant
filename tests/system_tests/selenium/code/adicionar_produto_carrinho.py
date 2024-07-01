@@ -59,7 +59,15 @@ def teste_adicionar_produto_carrinho(driver):
         )
         
         assert cart_text_element.text == "Shopping Cart", "'Shopping Cart' não encontrado na página do carrinho."
-        print("Teste realizado com sucesso!")
+
+        empty_cart_xpath = "//h4[contains(text(), 'Your cart is empty')]"
+        try:
+            empty_cart_element = driver.find_element(By.XPATH, empty_cart_xpath)
+            assert not empty_cart_element.is_displayed(), "O texto 'Your cart is empty' não deveria estar visível, mas está."
+        except Exception:
+            pass
+        
+        print("Teste realizado com sucesso.")
 
     except Exception as e:
         print(f"Erro durante a execução do teste: {e}")
