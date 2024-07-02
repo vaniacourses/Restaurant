@@ -32,4 +32,3 @@ Restaurant.iml
 .env
 .m2
 /bin/
-src/main/resources/application-dev.yml

@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/myopenrestaurant
     username: postgres
-    password: thefloor0
+    password: root
   jpa:
     properties:
       hibernate:

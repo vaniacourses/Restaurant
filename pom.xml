@@ -95,7 +95,6 @@
             <scope>test</scope>
             <version>2.2.220</version>
         </dependency>
-        
     </dependencies>
     <build>
         <finalName>Restaurant</finalName>
