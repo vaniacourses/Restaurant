@@ -32,3 +32,4 @@ Restaurant.iml
 .env
 .m2
 /bin/
+.vscode/settings.json
