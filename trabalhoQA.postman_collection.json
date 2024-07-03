@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "80d8e971-94bf-4042-8bbb-252b4312b2cd",
+		"name": "Trabalho Q&A",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32114141"
+	},
+	"item": [
+		{
+			"name": "Testa a home",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000",
+					"host": [
+						"localhost"
+					],
+					"port": "9000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testa Registro usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Redirecionado para /login\", function () {\r",
+							"    pm.response.to.have.status(302);\r",
+							"    pm.expect(pm.response.headers.get('Location')).to.include('/login');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_csrf",
+							"value": "buDJoHLI0LZ9JZ8NDSfrlPE3IWh9Gmm26jfHMYD7ZD4bVZB6VoH_wRf-soNQEPk4bwrfp5QADApIIw-b3Af-AOHOAFt5Y_Ue",
+							"type": "text"
+						},
+						{
+							"key": "emailId",
+							"value": "ppsobral@id.uff.br",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "firstName",
+							"value": "Pedro",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Paulo",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:9000/registration",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testa página de login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testa login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Redirecionado para /home\", function () {\r",
+							"    pm.response.to.have.status(302);\r",
+							"    pm.expect(pm.response.headers.get('Location')).to.include('/home');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_csrf",
+							"value": "EwkxIvhfZPwxJU4kaOtez6Sqx4lApHHGQRxbGrv0Se3oxMCDcGoCE889U5gcQC0VUcZqq8Wc6rB4xhPrdH5iIo_ELNrZp6Hl",
+							"type": "text"
+						},
+						{
+							"key": "emailId",
+							"value": "pp_sobral@id.uff.br",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:9000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testa carrinho",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/cart",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testa adição no carrinho",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Redirecionado para /cart\", function () {\r",
+							"    pm.response.to.have.status(302);\r",
+							"    pm.expect(pm.response.headers.get('Location')).to.include('/cart');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "productId",
+							"value": "1e21feb0-9cc3-4d7e-9925-4b1eaa6d14c2",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:9000/cart/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
