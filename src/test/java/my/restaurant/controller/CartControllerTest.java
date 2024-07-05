@@ -16,7 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class CartControllerTest {
@@ -35,6 +37,8 @@ class CartControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    
+    
     @Test
     void testarPaginaCarrinho() {
         ShoppingCart carrinhoCompras = mock(ShoppingCart.class);
@@ -94,23 +98,31 @@ class CartControllerTest {
         UUID idProduto = UUID.randomUUID();
         ProductDTO produtoDTO = mock(ProductDTO.class);
         when(servicoProduto.getProduct(idProduto)).thenReturn(produtoDTO);
+        when(produtoDTO.name()).thenReturn("Produto Exemplo");
 
         String resultado = controladorCarrinho.removeFromCart(idProduto, atributosRedirecionamento);
 
+        // Verificar se o retorno é "redirect:/cart"
         assertEquals("redirect:/cart", resultado);
+        
         verify(servicoCarrinho).removeItem(produtoDTO);
-        verify(atributosRedirecionamento).addFlashAttribute(anyString(), anyString());
+        verify(atributosRedirecionamento).addFlashAttribute("cartItemRemovedMsg", "Produto Exemplo was removed");
     }
+
 
     @Test
     void testarObterCarrinhoDeCompras() {
-        ShoppingCart carrinhoCompras = mock(ShoppingCart.class);
-        when(servicoCarrinho.getCart()).thenReturn(carrinhoCompras);
+    ShoppingCart carrinhoCompras = mock(ShoppingCart.class);
+    when(servicoCarrinho.getCart()).thenReturn(carrinhoCompras);
 
-        ShoppingCart resultado = controladorCarrinho.getShoppingCart();
+    ShoppingCart resultado = controladorCarrinho.getShoppingCart();
 
-        assertEquals(carrinhoCompras, resultado);
-    }
+    // Verificar se o retorno não é nulo
+    assertNotNull(resultado);
+    
+    // Verificar se o retorno é igual ao carrinho de compras mockado
+    assertEquals(carrinhoCompras, resultado);
+}
 
     @Test
     void testarRemoverItem() {
